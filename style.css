@@ -1,0 +1,28 @@
+body{
+    background-color: rgb(52, 57, 65);
+    color: white;
+}
+
+.grid{
+    display: grid;
+    grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+    position: relative;
+}
+
+.board{
+    position: relative;
+    height: 95vh;
+}
+
+.cell{
+    position: absolute;
+    background-color: gray;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+}
+
+.dim{
+    background-color: rgb(83, 83, 83);
+}
