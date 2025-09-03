@@ -76,7 +76,7 @@ for (let i=0; i<nodes.length; i++) {
 		cells.forEach(value=>value.cell.classList.remove('dim'))
 		removeAllChildren(svg)
 	})
-	const {x,y} = findFreeSpace(120, cellPositions, 100, boardCenter)
+	const {x,y} = findFreeSpace(50, cellPositions, 100, boardCenter)
 	cellPositions.push({x,y})
 	cell.style.top = y+'px'
 	cell.style.left = x+'px'
@@ -93,28 +93,23 @@ function findFreeSpace(stepSize=120, positions=[], spacing=100, anchor={x:0,y:0}
 		return !positions.some(p=> ((p.x-x)**2 + (p.y-y)**2) < spacing**2)
 	}
 
+	const maxTries = 10000
+	const goldenAngle = Math.PI * (3 - Math.sqrt(5)) // ~ 147.5deg
+
 	if (isClear(anchor)) return anchor
-	for (let i=1; i<25; i++) {
-		const candidate = {x:anchor.x-i*stepSize,y:anchor.y-i*stepSize}
+	for (let i=1; i<maxTries; i++) {
+		const r = stepSize * Math.sqrt(i)
+		const theta = i * goldenAngle
+
+		const candidate = {
+			x:anchor.x + r * Math.cos(theta),
+			y:anchor.y + r * Math.sin(theta)
+		}
+
 		if (isClear(candidate)) return candidate
-		for (let j = 0; j < i*2; j++) {
-			candidate.x += stepSize
-			if (isClear(candidate)) return candidate
-		}
-		for (let j = 0; j < i*2; j++) {
-			candidate.y += stepSize
-			if (isClear(candidate)) return candidate
-		}
-		for (let j = 0; j < i*2; j++) {
-			candidate.x -= stepSize
-			if (isClear(candidate)) return candidate
-		}
-		for (let j = 0; j < i*2; j++) {
-			candidate.y -= stepSize
-			if (isClear(candidate)) return candidate
-		}
 	}
 	return null
+	//The function is not packing the nodes close enough, there is loads of free space between them
 }
 
 
